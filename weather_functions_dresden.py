@@ -1,37 +1,3 @@
-#functions to import into the main source file
-
-"""
-Daytimes:
-
-morning: 0 - 6 uhr
-late morning: 6 - 11 uhr
-noon: 11 - 14 uhr
-afternoon: 14 - 19 uhr
-evening: 19 - 0 uhr
-
-* Output weather codes, for example, like this:
-
-* If 1-2 are the same, e.g. rain, and 3-5 are also the same, e.g. no rain: starts rainy, rain stops around midday.
-
-* If 1, 3, and 5 are the same: rain occurs repeatedly throughout the day.
-
-Possible combinations:
-
-* 1-5 the same: all day
-* 1-4 the same: all day, then towards the evening ...
-* 2-5 the same: starts with x, then y for the rest of the day
-* 1-3 and 4-5 the same: x until midday, y from the afternoon onwards
-* 1-2 the same and 3-5 the same: starts with x, y from midday onwards
-* 1-3 + 5 the same: x throughout the day, interrupted by y in the afternoon (morning, midday). This also applies to all combinations of this type, e.g. 1 + 3-5 the same, 1 + 2 + 4 + 5 the same.
-* 1-3 the same, while 4 and 5 are each different: x until early afternoon, then changeable weather
-* Nothing is the same, or no more than 2 values are the same: changeable weather, with the highest precipitation probability around e.g. the afternoon
-* The same weather occurs 3 times non-consecutively: x occurs repeatedly throughout the day, interrupted by y. If the other two points also differ: + y around midday and z in the evening
-* 2-4 the same, with 1 and 5 different: starts with x, then y throughout the day, changing to z towards the evening
-* 2-4 the same, with 1 and 5 the same: starts with x, y throughout the day, then x again towards the evening
-* 3-5 the same, with 1 and 2 different: starts changeable, then y from midday onwards
-
-"""
-
 from statistics import median
 
 #--- Temperature Functions
@@ -111,7 +77,7 @@ def thunderstorm_times(thunderstorm_forecast):
         return []
     
     start = thunderstorm_forecast[0][0]
-    end = thunderstorm_forecast[0][0]
+    end = calculate_end_minutes(previous_minutes)
     previous_minutes = thunderstorm_forecast[0][1]
     from_to_periods = []
 
@@ -162,8 +128,8 @@ def rainfall_times(rainfall_forecast):
         return []
 
     start = rainfall_forecast[0][0]
-    end = rainfall_forecast[0][0]
     previous_minutes = rainfall_forecast[0][1]
+    end = calculate_end_minutes(previous_minutes)
     previous_rainfall_type = rainfall_forecast[0][2]
     from_to_periods = []
 
@@ -260,7 +226,7 @@ def wind_gusts_times(gusts_forecast):
         return []
     
     start = gusts_forecast[0][0]
-    end = gusts_forecast[0][0]
+    end = calculate_end_minutes(previous_minutes)
     previous_minutes = gusts_forecast[0][1]
     from_to_periods = []
 
