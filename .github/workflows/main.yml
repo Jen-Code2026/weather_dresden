@@ -1,0 +1,30 @@
+name: Wetterbericht Dresden
+
+on:
+  workflow_dispatch:
+
+  schedule:
+  - cron: "27 5 * * *"
+    timezone: "Europe/Vienna"
+
+jobs:
+  run-weather:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository laden
+        uses: actions/checkout@v6
+
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Requests installieren
+        run: pip install requests tzdata
+
+      - name: Wetterbericht an Telegram senden
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+        run: python weather_dresden.py
